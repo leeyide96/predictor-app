@@ -2,7 +2,6 @@ import streamlit as st
 import folium
 from streamlit_folium import folium_static, st_folium
 from typing import Tuple
-import os
 import requests
 from io import BytesIO
 import joblib
@@ -10,8 +9,8 @@ import pandas as pd
 from utils import count_nearby
 from datetime import datetime
 
-PUBLIC_BUCKET = os.getenv('PUBLIC_BUCKET')
-CF_LINK = os.getenv('CF_LINK')
+PUBLIC_BUCKET = st.secrets['PUBLIC_BUCKET']
+CF_LINK = st.secrets['CF_LINK']
 
 @st.cache_resource
 def load_encoder_from_public_gcs(gcs_url):
