@@ -135,7 +135,7 @@ def display_price_page():
         st.write("Predicting Price")
         response = requests.post(CF_LINK, json={"instances": [info]})
         predicted_price = response.json()[0]
-        status.update(label="Price Predicted", expanded=False, state="complete")
+        status.update(label="Price Predicted!", expanded=False, state="complete")
 
     st.markdown("#### Property Details: ")
 
