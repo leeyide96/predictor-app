@@ -100,7 +100,7 @@ def generate_list_items(items):
 
 def display_price_page():
     today = datetime.now()
-    with st.status("", expanded=True):
+    with st.status("In Progress", expanded=True) as status:
         st.write("Parsing data")
         yearquarter = f"{today.year}Q{(today.month - 1) // 3 + 1}"
         room = int(st.session_state.flat_type[0])
@@ -135,7 +135,7 @@ def display_price_page():
         st.write("Predicting Price")
         response = requests.post(CF_LINK, json={"instances": [info]})
         predicted_price = response.json()[0]
-        st.write("Price Predicted")
+        status.update(label="Price Predicted", expanded=False, state="complete")
 
     st.markdown("#### Property Details: ")
 
@@ -188,7 +188,7 @@ def get_map_json():
     return config
 
 def main_page():
-    st.title("HDB Price Predictor")
+    st.title("HDB Resale Price Predictor")
 
     hawker_markets = retrieve_csv(f"{PUBLIC_BUCKET}/hawker_markets.csv")
     resale_index = retrieve_csv(f"{PUBLIC_BUCKET}/resale_index.csv")
