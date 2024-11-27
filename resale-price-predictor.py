@@ -1,7 +1,6 @@
 import streamlit as st
 import folium
 from streamlit_folium import folium_static, st_folium
-from typing import Tuple
 import requests
 from io import BytesIO
 import joblib
@@ -35,19 +34,65 @@ def load_encoder_from_public_gcs(gcs_url):
 
 @st.cache_data
 def retrieve_csv(url):
+    """
+    Retrieve and load a CSV file from a given URL using pandas.
+
+    Parameters:
+        url (str): The URL pointing to the CSV file to be loaded
+
+    Returns:
+        pandas.DataFrame: The loaded CSV data as a DataFrame
+
+    Note:
+        This function is cached using streamlit's cache_data decorator to improve performance
+    """
     data = pd.read_csv(url)
     return data
 
+
 def get_tilejson_config():
-    """Fetch the TileJSON configuration from OneMap."""
+    """
+    Fetch the TileJSON configuration from OneMap Singapore API.
+
+    Returns:
+        dict: The TileJSON configuration containing map settings and tile URLs
+    """
     url = "https://www.onemap.gov.sg/maps/json/raster/tilejson/2.2.0/Default.json"
     response = requests.get(url)
     return response.json()
 
 
-def create_singapore_map(config: dict, center: Tuple[float, float] = (1.3521, 103.8198)) -> folium.Map:
+@st.cache_data
+def get_map_json():
+    """
+    Retrieve and cache the map configuration JSON from OneMap.
+
+    Returns:
+        dict: Cached map configuration
+
+    Notes:
+        Uses streamlit's cache_data decorator to improve performance
+    """
+    try:
+        config = get_tilejson_config()
+    except Exception as e:
+        st.error("Failed to load map configuration. Please try again later.")
+        st.stop()
+    return config
+
+
+def create_singapore_map(config, center=(1.3521, 103.8198)):
     """
     Create a Folium map using OneMap's TileJSON configuration.
+
+    Parameters:
+        config (dict): TileJSON configuration containing map settings
+        center (Tuple[float, float], optional): Center coordinates for the map.
+            Defaults to Singapore's approximate center (1.3521, 103.8198)
+
+    Returns:
+        folium.Map: A configured Folium map instance centered on Singapore
+
     """
     # Extract configuration from TileJSON
     min_zoom = config.get('minzoom', 11)
@@ -70,8 +115,20 @@ def create_singapore_map(config: dict, center: Tuple[float, float] = (1.3521, 10
 
     return singapore_map
 
+
 @st.fragment
 def display_coordinates_map(config):
+    """
+    Display an interactive map that allows users to click and get coordinates.
+
+    Parameters:
+        config (dict): TileJSON configuration for the map
+
+    Notes:
+        - Creates a split layout with map and coordinate display
+        - Stores clicked coordinates in streamlit session state
+        - Updates live with each new click on the map
+    """
     col1, col2 = st.columns([3,1])
     with col1:
         st.write("Click anywhere on the map to get coordinates")
@@ -91,14 +148,21 @@ def display_coordinates_map(config):
             st.write(f"Longitude: {lng:.6f}")
             st.session_state.clicked_coords = (lat, lng)
 
+
 def return_main():
     st.session_state.page = "main"
 
-def generate_list_items(items):
-    return (' ').join([f'  '
-                      f'- {item}' for item in items])
 
 def display_price_page():
+    """
+    Display the price prediction results page with property details and nearby amenities.
+
+    Notes:
+        - Shows loading status during prediction process
+        - Displays property details including flat type, lease years, and predicted price
+        - Shows nearby amenities including MRT stations, hawker centers, and schools
+        - Provides a button to return to main page
+    """
     today = datetime.now()
     with st.status("In Progress", expanded=True) as status:
         st.write("Parsing data")
@@ -178,16 +242,16 @@ def display_price_page():
     st.button("Return to main page", on_click=return_main)
 
 
-@st.cache_data
-def get_map_json():
-    try:
-        config = get_tilejson_config()
-    except Exception as e:
-        st.error("Failed to load map configuration. Please try again later.")
-        st.stop()
-    return config
-
 def main_page():
+    """
+    Display the main page of the HDB Resale Price Predictor application.
+
+    Notes:
+        - Loads necessary data from CSV files
+        - Displays interactive map for location selection
+        - Provides form for user input (flat type, lease years, floor level)
+        - Handles form submission and navigation to price prediction page
+    """
     st.title("HDB Resale Price Predictor")
 
     hawker_markets = retrieve_csv(f"{PUBLIC_BUCKET}/hawker_markets.csv")
