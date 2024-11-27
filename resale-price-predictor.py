@@ -136,7 +136,7 @@ def display_coordinates_map(config):
         m = create_singapore_map(config)
         # Add click event handling
         m.add_child(folium.LatLngPopup())
-        map_data = st_folium(m, width=None, height=400)
+        map_data = st_folium(m, width=300, height=400)
     with col2:
         if map_data['last_clicked']:
             lat = map_data['last_clicked']['lat']
