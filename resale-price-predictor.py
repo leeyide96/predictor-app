@@ -267,10 +267,10 @@ def main_page():
     with st.form("Form", border=False):
         option = st.selectbox(
             "Which type of HDB flat you want?",
-            ("1-room", "2-room", "3-room", "4-room", "5-room"),
+            ("1-room", "2-room", "3-room", "4-room", "5-room"), index=3
         )
-        years = st.slider("Lease Years Left", 20, 95, step=5)
-        floor = st.slider("Floor Level", 1, 50, step=1)
+        years = st.slider("Lease Years Left", 20, 95, step=5, value=90)
+        floor = st.slider("Floor Level", 1, 50, step=1, value=10)
         submitted = st.form_submit_button("Submit")
         if submitted:
             st.session_state.flat_type = option
