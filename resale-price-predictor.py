@@ -137,7 +137,6 @@ def display_coordinates_map(config):
         # Add click event handling
         m.add_child(folium.LatLngPopup())
         map_data = st_folium(m, width=None, height=400)
-
     with col2:
         if map_data['last_clicked']:
             lat = map_data['last_clicked']['lat']
@@ -282,7 +281,7 @@ def main_page():
         st.session_state.page = "display_price"
         st.rerun()
     elif submitted and not town:
-        st.error("Please select your coordinates from urban area within Singapore", icon="🚨")
+        st.error("Nearby HDB is not found in the area. Please select your coordinates from urban area within Singapore", icon="🚨")
 
 def main():
 
