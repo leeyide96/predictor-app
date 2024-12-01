@@ -7,6 +7,9 @@ import joblib
 import pandas as pd
 from utils import count_nearby
 from datetime import datetime
+import os
+
+os.environ["STREAMLIT_CLIENT_SHOW_ERROR_DETAILS"] = False
 
 PUBLIC_BUCKET = st.secrets['PUBLIC_BUCKET']
 CF_LINK = st.secrets['CF_LINK']
@@ -279,7 +282,6 @@ def main_page():
     _, _, town = count_nearby(st.session_state.clicked_coords, street_blocks, 1, "town")
     if submitted and town and st.session_state.clicked_coords:
         st.session_state.page = "display_price"
-        st.rerun(scope="fragment")
         st.rerun()
     elif submitted and not town:
         st.error("Nearby HDB is not found in the area. Please select your coordinates from urban area within Singapore", icon="🚨")
