@@ -9,7 +9,7 @@ from utils import count_nearby
 from datetime import datetime
 import os
 
-os.environ["STREAMLIT_CLIENT_SHOW_ERROR_DETAILS"] = False
+os.environ["STREAMLIT_CLIENT_SHOW_ERROR_DETAILS"] = "false"
 
 PUBLIC_BUCKET = st.secrets['PUBLIC_BUCKET']
 CF_LINK = st.secrets['CF_LINK']
