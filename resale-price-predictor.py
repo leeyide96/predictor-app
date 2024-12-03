@@ -186,7 +186,7 @@ def display_price_page():
                     town_enc = st.session_state.encoder.transform(town_df).iloc[0]
                 except Exception as e:
                     st.error("Sorry! Ran into some error!")
-                    logging.info(town_df)
+                    print(town_df)
                 info.append(int(town_enc))
             elif name_col == 'school_name':
                 pri_sch = df[df.mainlevel_code == "PRIMARY"]
