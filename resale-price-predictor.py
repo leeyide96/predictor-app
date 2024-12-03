@@ -180,13 +180,8 @@ def display_price_page():
                 index = df[df.quarter == yearquarter]["index"].iloc[0]
                 info.append(index)
             elif name_col == 'town':
-                _, _, town = count_nearby(st.session_state.clicked_coords, df, 0.5, name_col)
-                town_df = pd.DataFrame({name_col: town})
-                try:
-                    town_enc = st.session_state.encoder.transform(town_df).iloc[0]
-                except Exception as e:
-                    st.error("Sorry! Ran into some error!")
-                    print(town_df)
+                town_df = pd.DataFrame({name_col: st.session_state.town})
+                town_enc = st.session_state.encoder.transform(town_df).iloc[0]
                 info.append(int(town_enc))
             elif name_col == 'school_name':
                 pri_sch = df[df.mainlevel_code == "PRIMARY"]
@@ -288,6 +283,7 @@ def main_page():
     print(town)
     if submitted and town and st.session_state.clicked_coords:
         st.session_state.page = "display_price"
+        st.session_state.town = town
         st.rerun()
     elif submitted and not town:
         st.error("HDB is not found in the area. Please select your coordinates from urban area within Singapore", icon="🚨")
@@ -302,13 +298,17 @@ def main():
         st.session_state.floor = None
         st.session_state.encoder = None
         st.session_state.data = {}
+        st.session_state.town = []
         st.session_state.page = "main"
 
 
     # Page routing
     page_functions = {"main": main_page, "display_price": display_price_page}
     to_run = page_functions[st.session_state.page]
-    to_run()
+    try:
+        to_run()
+    except Exception as e:
+        st.error("Sorry the app has encountered some error! Please try again later!")
 
 
 if __name__ == "__main__":
