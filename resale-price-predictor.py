@@ -8,6 +8,7 @@ import pandas as pd
 from utils import count_nearby
 from datetime import datetime
 import os
+import logging
 
 os.environ["STREAMLIT_CLIENT_SHOW_ERROR_DETAILS"] = "false"
 
@@ -181,7 +182,11 @@ def display_price_page():
             elif name_col == 'town':
                 _, _, town = count_nearby(st.session_state.clicked_coords, df, 0.5, name_col)
                 town_df = pd.DataFrame({name_col: town})
-                town_enc = st.session_state.encoder.transform(town_df).iloc[0]
+                try:
+                    town_enc = st.session_state.encoder.transform(town_df).iloc[0]
+                except Exception as e:
+                    st.error("Sorry! Ran into some error!")
+                    logging.info(town_df)
                 info.append(int(town_enc))
             elif name_col == 'school_name':
                 pri_sch = df[df.mainlevel_code == "PRIMARY"]
@@ -284,7 +289,7 @@ def main_page():
         st.session_state.page = "display_price"
         st.rerun()
     elif submitted and not town:
-        st.error("Nearby HDB is not found in the area. Please select your coordinates from urban area within Singapore", icon="🚨")
+        st.error("HDB is not found in the area. Please select your coordinates from urban area within Singapore", icon="🚨")
 
 def main():
 
