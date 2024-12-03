@@ -219,27 +219,32 @@ def display_price_page():
     st.divider()
     col4, col5, col6 = st.columns(3)
     with col4:
-        st.markdown("##### Transportation")
-        st.markdown("###### Nearby MRT Stations")
-        for station in facilities_nearby["mrt_station_english"]:
-            st.write(f"• {station}")
+        if facilities_nearby["mrt_station_english"]:
+            st.markdown("##### Transportation")
+            st.markdown("###### Nearby MRT Stations")
+            for station in facilities_nearby["mrt_station_english"]:
+                st.write(f"• {station}")
 
     # Amenities
     with col5:
-        st.markdown("##### Amenities")
-        st.markdown("###### Hawker Centers & Food Markets")
-        for hawker in facilities_nearby["name"]:
-            st.write(f"• {hawker}")
+        if facilities_nearby["name"]:
+            st.markdown("##### Amenities")
+            st.markdown("###### Hawker Centers & Food Markets")
+            for hawker in facilities_nearby["name"]:
+                st.write(f"• {hawker}")
 
     # Education
     with col6:
-        st.markdown("##### Education")
-        st.markdown("###### Primary Schools in Vicinity")
-        for school in facilities_nearby["school_name_pri"]:
-            st.write(f"• {school}")
-        st.markdown("###### Secondary Schools in Vicinity")
-        for school in facilities_nearby["school_name_sec"]:
-            st.markdown(f"• {school}")
+        if facilities_nearby["school_name_pri"] or facilities_nearby["school_name_sec"]:
+            st.markdown("##### Education")
+        if facilities_nearby["school_name_pri"]:
+            st.markdown("###### Primary Schools in Vicinity")
+            for school in facilities_nearby["school_name_pri"]:
+                st.write(f"• {school}")
+        if facilities_nearby["school_name_sec"]:
+            st.markdown("###### Secondary Schools in Vicinity")
+            for school in facilities_nearby["school_name_sec"]:
+                st.markdown(f"• {school}")
 
     st.button("Return to main page", on_click=return_main)
 
