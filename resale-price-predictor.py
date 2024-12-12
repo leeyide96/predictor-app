@@ -65,7 +65,7 @@ def get_tilejson_config():
     response = requests.get(url)
     return response.json()
 
-
+@st.cache_data
 def get_map_json():
     """
     Retrieve and cache the map configuration JSON from OneMap.
@@ -78,7 +78,6 @@ def get_map_json():
     """
     try:
         config = get_tilejson_config()
-        logging.info(config)
     except Exception as e:
         st.error("Failed to load map configuration. Please try again later.")
         st.stop()
@@ -270,7 +269,6 @@ def main_page():
     st.session_state.encoder = load_encoder_from_public_gcs(f"{PUBLIC_BUCKET}/meanencoder.joblib")
     # Fetch TileJSON configuration
     config = get_map_json()
-    st.write(config)
 
     display_coordinates_map(config)
     with st.form("Form", border=False):
