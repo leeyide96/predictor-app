@@ -270,6 +270,7 @@ def main_page():
     st.session_state.encoder = load_encoder_from_public_gcs(f"{PUBLIC_BUCKET}/meanencoder.joblib")
     # Fetch TileJSON configuration
     config = get_map_json()
+    print(config)
 
     display_coordinates_map(config)
     with st.form("Form", border=False):
