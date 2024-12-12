@@ -1,4 +1,4 @@
-streamlit
+streamlit==1.40.1
 streamlit_folium
 numpy==1.26.4
 pandas
