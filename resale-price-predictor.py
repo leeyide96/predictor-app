@@ -270,7 +270,7 @@ def main_page():
     st.session_state.encoder = load_encoder_from_public_gcs(f"{PUBLIC_BUCKET}/meanencoder.joblib")
     # Fetch TileJSON configuration
     config = get_map_json()
-    logging.info(config)
+    st.write(config)
 
     display_coordinates_map(config)
     with st.form("Form", border=False):
@@ -286,7 +286,6 @@ def main_page():
             st.session_state.years_left = years
             st.session_state.floor = floor
     _, _, town = count_nearby(st.session_state.clicked_coords, street_blocks, 1, "town")
-    print(town)
     if submitted and town and st.session_state.clicked_coords:
         st.session_state.page = "display_price"
         st.session_state.town = town
