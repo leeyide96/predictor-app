@@ -78,6 +78,7 @@ def get_map_json():
     """
     try:
         config = get_tilejson_config()
+        print(config)
     except Exception as e:
         st.error("Failed to load map configuration. Please try again later.")
         st.stop()
