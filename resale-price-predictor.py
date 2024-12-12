@@ -101,7 +101,7 @@ def create_singapore_map(config, center=(1.3521, 103.8198)):
     # Extract configuration from TileJSON
     min_zoom = config.get('minzoom', 11)
     max_zoom = config.get('maxzoom', 19)
-    bounds = bounds = config.get('bounds', [103.6, 1.15, 104.0, 1.45])  # [west, south, east, north]
+    bounds = config.get('bounds', [103.6, 1.15, 104.0, 1.45])  # [west, south, east, north]
 
     # Create the map centered on Singapore
     singapore_map = folium.Map(
