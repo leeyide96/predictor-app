@@ -66,7 +66,6 @@ def get_tilejson_config():
     return response.json()
 
 
-@st.cache_data
 def get_map_json():
     """
     Retrieve and cache the map configuration JSON from OneMap.
