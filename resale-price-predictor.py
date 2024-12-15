@@ -16,6 +16,10 @@ PUBLIC_BUCKET = st.secrets['PUBLIC_BUCKET']
 CF_LINK = st.secrets['CF_LINK']
 
 @st.cache_resource
+def create_request_session():
+    return requests.Session()
+
+@st.cache_resource
 def load_encoder_from_public_gcs(gcs_url):
     """
     Load a joblib encoder from a public Google Cloud Storage bucket.
@@ -198,7 +202,7 @@ def display_price_page():
         info.extend([room, remaining_lease, level])
         st.write("Data Processed")
         st.write("Predicting Price")
-        response = requests.post(CF_LINK, json={"instances": [info]})
+        response = st.session_state.session.post(CF_LINK, json={"instances": [info]})
         predicted_price = response.json()[0]
         status.update(label="Price Predicted!", expanded=False, state="complete")
 
@@ -267,6 +271,7 @@ def main_page():
     train_stations = retrieve_csv(f"{PUBLIC_BUCKET}/train_stations.csv")
     st.session_state.data = {"school_name": schools, "name": hawker_markets, "mrt_station_english": train_stations, "town": street_blocks, "index": resale_index}
     st.session_state.encoder = load_encoder_from_public_gcs(f"{PUBLIC_BUCKET}/meanencoder.joblib")
+    st.session_state.session = create_request_session()
     # Fetch TileJSON configuration
     config = get_map_json()
 
@@ -300,6 +305,7 @@ def main():
         st.session_state.years_left = None
         st.session_state.floor = None
         st.session_state.encoder = None
+        st.session_state.session = None
         st.session_state.data = {}
         st.session_state.town = []
         st.session_state.page = "main"
